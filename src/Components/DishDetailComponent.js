@@ -3,34 +3,41 @@ import { Container, Row, Col } from 'reactstrap';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody,
     CardTitle } from 'reactstrap';
 
-class DishDetail extends Component{
-    constructor(props)
-    {
-        super(props);
-        this.state = {};
-    }
-    details (dish) {
+    function details (dish) {
         return(
             <Row>
                     <div className = "col-12 col-md-5 m-1">
-                        <Card>
-                            <CardImg top width="100%" src= {dish.image} alt={dish.name} />
-                                <CardBody>
-                                    <CardTitle>{dish.name}</CardTitle>
-                                        <CardText>{dish.description}</CardText>
-                                 </CardBody>
-                        </Card>
+                    {renderDish(dish)}
                     </div>  
                     <div className = "col-12 col-md-5 m-1">
-                    {this.renderComments(dish.comments)}
+                    {renderComments(dish)}
                     </div> 
                
             </Row>  
         );
     }
-
-    renderComments(comments)
+    function renderDish(dish)
     {
+        if (dish == null)
+        return(<div></div>);
+        else{
+            return(
+                <Card>
+                <CardImg top width="100%" src= {dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle>{dish.name}</CardTitle>
+                            <CardText>{dish.description}</CardText>
+                     </CardBody>
+            </Card>
+            );
+        }
+    }
+
+    function renderComments(dish)
+    {
+        if(dish == null)
+            return(<div></div>)
+        const comments = dish.comments;
         if(comments == null)
             return(<div></div>);
         else{
@@ -41,7 +48,7 @@ class DishDetail extends Component{
                 {item.comment}
             </li>
             <li>
-                --{item.author}, {item.date}
+                --{item.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(item.date)))}
             </li>
             </ul>
             );
@@ -56,13 +63,13 @@ class DishDetail extends Component{
         }
     }
 
-    render()
-    {
+    const  DishDetail = (props) => {
+        if(props.dish == null)
+        return (<div></div>)
+        else
         return(
-            <div>{this.details(this.props.dish)}</div>
+            <div className="container">{details(props.dish)}</div>
         );
-    }
-
 }
 
 export default DishDetail;
